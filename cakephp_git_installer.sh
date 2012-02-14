@@ -23,7 +23,6 @@
 
 CAKEPHP_REPOSITORY=${CAKEPHP_REPOSITORY:-"git://github.com/cakephp/cakephp.git"}
 CAKEPHP_SHARED_PATH=${CAKEPHP_SHARED_PATH:-~/.submodule_cakephp}
-CAKEPHP_GITIGNORE='https://raw.github.com/github/gitignore/master/CakePHP.gitignore' 
 
 if [ $# -lt 2 ]; then
   echo "$0 <project_path> <cakephp_version>"
@@ -93,7 +92,8 @@ setup_git_repository()
 {
   cd $project_path
   git add .gitmodules cakephp app
-  wget -O- $CAKEPHP_GITIGNORE > .gitignore
+  echo '/app/tmp/*' >> .gitignore
+  echo '/app/Config/database.php' >> .gitignore
   git add .gitignore
 }
 
