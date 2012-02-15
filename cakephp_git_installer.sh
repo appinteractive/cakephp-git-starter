@@ -34,6 +34,14 @@ $ROOT_DIR/cakephp/lib/Cake/Console/cake -app $ROOT_DIR/app "$@"
 _EOT_
 }
 
+gitignore()
+{
+  cat <<'_EOT_'
+/app/tmp/*
+/app/Config/database.php
+_EOT_
+}
+
 if [ $# -lt 2 ]; then
   echo "$0 <project_path> <cakephp_version>"
   exit
@@ -107,8 +115,7 @@ setup_git_repository()
   cakeshell > bin/cake
   chmod +x bin/cake
 
-  echo '/app/tmp/*' >> .gitignore
-  echo '/app/Config/database.php' >> .gitignore
+  gitignore > .gitignore
 
   git add bin .gitignore
 }
