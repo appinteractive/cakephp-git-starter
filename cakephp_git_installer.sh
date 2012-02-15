@@ -24,6 +24,16 @@
 CAKEPHP_REPOSITORY=${CAKEPHP_REPOSITORY:-"git://github.com/cakephp/cakephp.git"}
 CAKEPHP_SHARED_PATH=${CAKEPHP_SHARED_PATH:-~/.submodule_cakephp}
 
+# file template
+cakeshell()
+{
+  cat <<'_EOT_'
+#!/bin/sh
+ROOT_DIR=$(cd "$(dirname $0)/../"; pwd)
+$ROOT_DIR/cakephp/lib/Cake/Console/cake -app $ROOT_DIR/app "$@"
+_EOT_
+}
+
 if [ $# -lt 2 ]; then
   echo "$0 <project_path> <cakephp_version>"
   exit
@@ -92,9 +102,15 @@ setup_git_repository()
 {
   cd $project_path
   git add .gitmodules cakephp app
+
+  mkdir bin
+  cakeshell > bin/cake
+  chmod +x bin/cake
+
   echo '/app/tmp/*' >> .gitignore
   echo '/app/Config/database.php' >> .gitignore
-  git add .gitignore
+
+  git add bin .gitignore
 }
 
 init_shared_repository || error "initialize shared repository"
